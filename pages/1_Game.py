@@ -1,9 +1,11 @@
 import streamlit as st
 import random as rand
 import pandas as pd
-# from tkinter import font, Tk, ttk
 
-st.title('Rainbow Dice')
+st.set_page_config(
+    page_title="Rainbow Dice Game",
+    page_icon="🎲",
+)
 
 def reset_button():
     st.session_state['red'] = False
@@ -28,6 +30,8 @@ def roll_dice():
     # st.write(f"Yellow = {yellow} for options of {yellow + white_1} or {yellow + white_2}")
     # st.write(f"green = {green} for options of {green + white_1} or {green + white_2}")
     # st.write(f"blue = {blue} for options of {blue + white_1} or {blue + white_2}")
+    # Sort White Dice
+    white1, white2 = min(white1,white2),max(white1,white2)
     return [white1, white2, red, yellow, green, blue]
 
 diceColor = ["⬜","⬜","🟥","🟨","🟩","🟦"]
@@ -53,6 +57,9 @@ if len(filterValues) <= 3 or lockPen:
     st.header("GAME OVER")
     reset = st.button("RESET GAME",on_click=reset_button)
 else:
+    st.write(
+        """Press **_ROLL DICE_**"""
+    )
     if st.button('ROLL DICE'): # When button press, dice are rolled
         dice = roll_dice()
         
@@ -70,4 +77,36 @@ else:
     diceFrame = pd.DataFrame(data=dice_rolls)
     filterDice = diceFrame.filter(axis=0,items=filterValues)
     # diceFrame
-    filterDice
+    # filterDice
+
+    st.markdown(
+        """
+        ### **Options:**\n
+        ### **{w1} ⬜ {w2} ⬜ = {opt1}**\n
+        """.format(w1=dice[0],w2=dice[1],opt1=opt1[0],opt2=opt2[0])
+    )
+    if st.session_state['red'] != True:
+        st.markdown(
+            """
+            ### **:red[{r} 🟥 = {opt3} | {opt4}]**
+            """.format(r=dice[2],opt3=opt1[2],opt4=opt2[2])
+        )
+    if st.session_state['yel'] != True:
+        st.markdown(
+            """
+            ### **:orange[{y} 🟨 = {opt5} | {opt6}]**
+            """.format(y=dice[3],opt5=opt1[3],opt6=opt2[3])
+        )
+    if st.session_state['gre'] != True:
+        st.markdown(
+            """
+            ### **:green[{g} 🟩 = {opt7} | {opt8}]**
+            """.format(g=dice[4],opt7=opt1[4],opt8=opt2[4])
+        )
+    if st.session_state['blu'] != True:
+        st.markdown(
+            """
+            ### **:blue[{b} 🟦 = {opt9} | {opt10}]**\n
+            """.format(b=dice[5],opt9=opt1[5],opt10=opt2[5])
+        )
+
